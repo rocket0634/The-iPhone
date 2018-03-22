@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using iPhone;
 
@@ -11,8 +13,8 @@ public class iPhoneScript : MonoBehaviour
     public KMAudio Audio;
 
     //PIN
-    public List <String> pinDigits;
-    public List <String> pinOptions;
+    public List<String> pinDigits;
+    public List<String> pinOptions;
     string enteredPIN = "";
     string correctPIN;
     string solved = "";
@@ -45,10 +47,10 @@ public class iPhoneScript : MonoBehaviour
     public KMSelectable BottomLeft;
     public KMSelectable BottomRight;
     public Renderer stars;
-    public List <Texture> angryBirdsOptions;
-    public List <Renderer> angryBirdsButtons;
+    public List<Texture> angryBirdsOptions;
+    public List<Renderer> angryBirdsButtons;
     public TextMesh digitAnswer1;
-    private List <String> selectedABImages = new List <string>();
+    private List<String> selectedABImages = new List<string>();
     string correctAngryBird;
     string angryBirdsLabel;
     string birdsLogged = "";
@@ -81,10 +83,10 @@ public class iPhoneScript : MonoBehaviour
     public KMSelectable photoLeft;
     public KMSelectable photoRight;
     public Renderer photoScreen;
-    public List <Texture> decoyPhotos;
-    public List <Texture> truePhotos;
+    public List<Texture> decoyPhotos;
+    public List<Texture> truePhotos;
     private int selectedPhotosIndex;
-    private List <Texture> selectedPhotoImages = new List <Texture>();
+    private List<Texture> selectedPhotoImages = new List<Texture>();
     int truePhotosSelection;
     public Renderer revealedPhoto;
     string photoRevealLight;
@@ -94,11 +96,11 @@ public class iPhoneScript : MonoBehaviour
     public TextMesh tinderProfile;
     public KMSelectable swipeLeft;
     public KMSelectable swipeRight;
-    private List <String> tinderNames = new List <string> {"Sophie", "Carol", "Charlie", "Jess", "Chloe", "Sarah", "Mary", "Megan", "Lisa", "Kate", "Lauren", "Freya", "Emma", "Frankie", "Barb", "Kate", "Juliet", "Shannon", "Sadie", "Ellie", "Emily"};
-    private List <String> tinderAges = new List <string> {"18", "21", "24", "25", "28", "30", "32", "34", "37", "40", "41", "44", "48"};
-    private List <String> tinderHobbies = new List <string> {"badminton", "golf", "the cinema", "the theatre", "dancing", "clubbing"};
-    private List <String> tinderStarSign = new List <string> {"Virgo", "Leo", "Scorpio", "Capricorn", "Cancer", "Gemini"};
-    private List <String> tinderPet = new List <string> {"cat", "dog", "goldfish", "gerbil", "hamster"};
+    private List<String> tinderNames = new List<string> { "Sophie", "Carol", "Charlie", "Jess", "Chloe", "Sarah", "Mary", "Megan", "Lisa", "Kate", "Lauren", "Freya", "Emma", "Frankie", "Barb", "Kate", "Juliet", "Shannon", "Sadie", "Ellie", "Emily" };
+    private List<String> tinderAges = new List<string> { "18", "21", "24", "25", "28", "30", "32", "34", "37", "40", "41", "44", "48" };
+    private List<String> tinderHobbies = new List<string> { "badminton", "golf", "the cinema", "the theatre", "dancing", "clubbing" };
+    private List<String> tinderStarSign = new List<string> { "Virgo", "Leo", "Scorpio", "Capricorn", "Cancer", "Gemini" };
+    private List<String> tinderPet = new List<string> { "cat", "dog", "goldfish", "gerbil", "hamster" };
     private String chosenTinderName;
     private String chosenTinderAge;
     private String chosenTinderHobby;
@@ -144,7 +146,7 @@ public class iPhoneScript : MonoBehaviour
 
     //Wallpapers
     public Renderer iPhoneScreen;
-    public List <Texture> wallpaper;
+    public List<Texture> wallpaper;
     private int wallpaperIndex;
     public Texture angryBirdsBackground;
     public Texture blackBackground;
@@ -185,27 +187,27 @@ public class iPhoneScript : MonoBehaviour
         moduleId = moduleIdCounter++;
 
         //Home screen buttons
-        angryBirds.OnInteract += delegate () { HomeButtonPress (angryBirds); return false; };
-        messages.OnInteract += delegate () { HomeButtonPress (messages); return false; };
-        photos.OnInteract += delegate () { HomeButtonPress (photos); return false; };
-        tinder.OnInteract += delegate () { HomeButtonPress (tinder); return false; };
-        phone.OnInteract += delegate () { HomeButtonPress (phone); return false; };
-        settings.OnInteract += delegate () { HomeButtonPress (settings); return false; };
+        angryBirds.OnInteract += delegate () { HomeButtonPress(angryBirds); return false; };
+        messages.OnInteract += delegate () { HomeButtonPress(messages); return false; };
+        photos.OnInteract += delegate () { HomeButtonPress(photos); return false; };
+        tinder.OnInteract += delegate () { HomeButtonPress(tinder); return false; };
+        phone.OnInteract += delegate () { HomeButtonPress(phone); return false; };
+        settings.OnInteract += delegate () { HomeButtonPress(settings); return false; };
         home.OnInteract += delegate () { OnhomeButton(); return false; };
 
         //Angry Birds buttons
-        TopLeft.OnInteract += delegate () { BirdsPress (TopLeft); return false; };
-        TopRight.OnInteract += delegate () { BirdsPress (TopRight); return false; };
-        BottomLeft.OnInteract += delegate () { BirdsPress (BottomLeft); return false; };
-        BottomRight.OnInteract += delegate () { BirdsPress (BottomRight); return false; };
+        TopLeft.OnInteract += delegate () { BirdsPress(TopLeft); return false; };
+        TopRight.OnInteract += delegate () { BirdsPress(TopRight); return false; };
+        BottomLeft.OnInteract += delegate () { BirdsPress(BottomLeft); return false; };
+        BottomRight.OnInteract += delegate () { BirdsPress(BottomRight); return false; };
 
         //Photos buttons
-        photoLeft.OnInteract += delegate () { PhotoPress (photoLeft); return false; };
-        photoRight.OnInteract += delegate () { PhotoPress (photoRight); return false; };
+        photoLeft.OnInteract += delegate () { PhotoPress(photoLeft); return false; };
+        photoRight.OnInteract += delegate () { PhotoPress(photoRight); return false; };
 
         //Tinder buttons
-        swipeLeft.OnInteract += delegate () { TinderPress (swipeLeft); return false; };
-        swipeRight.OnInteract += delegate () { TinderPress (swipeRight); return false; };
+        swipeLeft.OnInteract += delegate () { TinderPress(swipeLeft); return false; };
+        swipeRight.OnInteract += delegate () { TinderPress(swipeRight); return false; };
 
         //Phone buttons
         oneButton.OnInteract += delegate () { OnPhonePress("1"); return false; };
@@ -343,7 +345,7 @@ public class iPhoneScript : MonoBehaviour
         for (int digit = 0; digit < pinDigits.Count; ++digit)
         {
             int digitIndex = 0;
-            digitIndex = UnityEngine.Random.Range(0,10);
+            digitIndex = UnityEngine.Random.Range(0, 10);
             pinDigits[digit] = pinOptions[digitIndex];
         }
         Debug.LogFormat("[iPhone #{0}] The correct PIN is {1}{2}{3}{4}.", moduleId, pinDigits[0], pinDigits[1], pinDigits[2], pinDigits[3]);
@@ -355,30 +357,30 @@ public class iPhoneScript : MonoBehaviour
         foreach (Renderer texture in angryBirdsButtons)
         {
             int textureIndex = 0;
-            textureIndex = UnityEngine.Random.Range(0,10);
+            textureIndex = UnityEngine.Random.Range(0, 10);
             texture.material.mainTexture = angryBirdsOptions[textureIndex];
             selectedABImages.Add(texture.material.mainTexture.name);
         }
-		}
+    }
 
     void messageSetUp()
     {
-        List <String> philTruth = new List <string> {"The 2nd number is " + pinDigits[1] + ".", "Not sure. Maybe " + pinDigits[1] + "?", pinDigits[1] + " mate."};
-        List <String> robTruth = new List <string> {pinDigits[1] + "", pinDigits[1] + " is the second number.", "I think it's " + pinDigits[1] + "."};
-        List <String> mickTruth = new List <string> {"It's " + pinDigits[1], pinDigits[1] + "? No...yes, " + pinDigits[1], pinDigits[1] + "?"};
-        List <String> andyTruth = new List <string> {"Probably " + pinDigits[1], pinDigits[1] + " you numpty!", pinDigits[1] + "!"};
+        List<String> philTruth = new List<string> { "The 2nd number is " + pinDigits[1] + ".", "Not sure. Maybe " + pinDigits[1] + "?", pinDigits[1] + " mate." };
+        List<String> robTruth = new List<string> { pinDigits[1] + "", pinDigits[1] + " is the second number.", "I think it's " + pinDigits[1] + "." };
+        List<String> mickTruth = new List<string> { "It's " + pinDigits[1], pinDigits[1] + "? No...yes, " + pinDigits[1], pinDigits[1] + "?" };
+        List<String> andyTruth = new List<string> { "Probably " + pinDigits[1], pinDigits[1] + " you numpty!", pinDigits[1] + "!" };
 
-        int philWrongDigit = UnityEngine.Random.Range(0,2);
-        List <String> philLies = new List <string> {philWrongDigit + "", philWrongDigit + " is the second number.", "I think it's " + philWrongDigit + ".", "It's " + philWrongDigit, philWrongDigit + "? No...yes, " + philWrongDigit, philWrongDigit + "?", "Probably " + philWrongDigit, philWrongDigit + " you numpty!", philWrongDigit + "!"};
-        int robWrongDigit = UnityEngine.Random.Range(2,5);
-        List <String> robLies = new List <string> {"The 2nd number is " + robWrongDigit + ".", "Not sure. Maybe " + robWrongDigit + "?", robWrongDigit + " mate.", "It's " + robWrongDigit, robWrongDigit + "? No...yes, " + robWrongDigit, robWrongDigit + "?", "Probably " + robWrongDigit, robWrongDigit + " you numpty!", robWrongDigit + "!"};
-        int mickWrongDigit = UnityEngine.Random.Range(5,8);
-        List <String> mickLies = new List <string> {"The 2nd number is " + mickWrongDigit + ".", "Not sure. Maybe " + mickWrongDigit + "?", mickWrongDigit + " mate.", mickWrongDigit + "", mickWrongDigit + " is the second number.", "I think it's " + mickWrongDigit + ".", "Probably " + mickWrongDigit, mickWrongDigit + " you numpty!", mickWrongDigit + "!"};
-        int andyWrongDigit = UnityEngine.Random.Range(0,10);
-        List <String> andyLies = new List <string> {"The 2nd number is " + andyWrongDigit + ".", "Not sure. Maybe " + andyWrongDigit + "?", andyWrongDigit + " mate.", andyWrongDigit + "", andyWrongDigit + " is the second number.", "I think it's " + andyWrongDigit + ".", "It's " + andyWrongDigit, andyWrongDigit + "? No...yes, " + andyWrongDigit, andyWrongDigit + "?"};;
+        int philWrongDigit = UnityEngine.Random.Range(0, 2);
+        List<String> philLies = new List<string> { philWrongDigit + "", philWrongDigit + " is the second number.", "I think it's " + philWrongDigit + ".", "It's " + philWrongDigit, philWrongDigit + "? No...yes, " + philWrongDigit, philWrongDigit + "?", "Probably " + philWrongDigit, philWrongDigit + " you numpty!", philWrongDigit + "!" };
+        int robWrongDigit = UnityEngine.Random.Range(2, 5);
+        List<String> robLies = new List<string> { "The 2nd number is " + robWrongDigit + ".", "Not sure. Maybe " + robWrongDigit + "?", robWrongDigit + " mate.", "It's " + robWrongDigit, robWrongDigit + "? No...yes, " + robWrongDigit, robWrongDigit + "?", "Probably " + robWrongDigit, robWrongDigit + " you numpty!", robWrongDigit + "!" };
+        int mickWrongDigit = UnityEngine.Random.Range(5, 8);
+        List<String> mickLies = new List<string> { "The 2nd number is " + mickWrongDigit + ".", "Not sure. Maybe " + mickWrongDigit + "?", mickWrongDigit + " mate.", mickWrongDigit + "", mickWrongDigit + " is the second number.", "I think it's " + mickWrongDigit + ".", "Probably " + mickWrongDigit, mickWrongDigit + " you numpty!", mickWrongDigit + "!" };
+        int andyWrongDigit = UnityEngine.Random.Range(0, 10);
+        List<String> andyLies = new List<string> { "The 2nd number is " + andyWrongDigit + ".", "Not sure. Maybe " + andyWrongDigit + "?", andyWrongDigit + " mate.", andyWrongDigit + "", andyWrongDigit + " is the second number.", "I think it's " + andyWrongDigit + ".", "It's " + andyWrongDigit, andyWrongDigit + "? No...yes, " + andyWrongDigit, andyWrongDigit + "?" }; ;
 
 
-        int truthIndex = UnityEngine.Random.Range(0,4);
+        int truthIndex = UnityEngine.Random.Range(0, 4);
         if (truthIndex == 0)
         {
             truthTeller = "Phil";
@@ -396,11 +398,11 @@ public class iPhoneScript : MonoBehaviour
             truthTeller = "Andy";
         }
 
-        int messagePicker = UnityEngine.Random.Range(0,3);
-        int philLiePicker = UnityEngine.Random.Range(0,9);
-        int robLiePicker = UnityEngine.Random.Range(0,9);
-        int mickLiePicker = UnityEngine.Random.Range(0,9);
-        int andyLiePicker = UnityEngine.Random.Range(0,9);
+        int messagePicker = UnityEngine.Random.Range(0, 3);
+        int philLiePicker = UnityEngine.Random.Range(0, 9);
+        int robLiePicker = UnityEngine.Random.Range(0, 9);
+        int mickLiePicker = UnityEngine.Random.Range(0, 9);
+        int andyLiePicker = UnityEngine.Random.Range(0, 9);
         if (truthTeller == "Phil")
         {
             philText.text = philTruth[messagePicker];
@@ -457,19 +459,19 @@ public class iPhoneScript : MonoBehaviour
     {
         tinderScore = 0;
 
-        int tinderNameIndex = UnityEngine.Random.Range(0,tinderNames.Count);
+        int tinderNameIndex = UnityEngine.Random.Range(0, tinderNames.Count);
         chosenTinderName = tinderNames[tinderNameIndex];
 
-        int tinderAgeIndex = UnityEngine.Random.Range(0,tinderAges.Count);
+        int tinderAgeIndex = UnityEngine.Random.Range(0, tinderAges.Count);
         chosenTinderAge = tinderAges[tinderAgeIndex];
 
-        int tinderHobbyIndex = UnityEngine.Random.Range(0,tinderHobbies.Count);
+        int tinderHobbyIndex = UnityEngine.Random.Range(0, tinderHobbies.Count);
         chosenTinderHobby = tinderHobbies[tinderHobbyIndex];
 
-        int tinderStarSignIndex = UnityEngine.Random.Range(0,tinderStarSign.Count);
+        int tinderStarSignIndex = UnityEngine.Random.Range(0, tinderStarSign.Count);
         chosenTinderStarSign = tinderStarSign[tinderStarSignIndex];
 
-        int tinderPetIndex = UnityEngine.Random.Range(0,tinderPet.Count);
+        int tinderPetIndex = UnityEngine.Random.Range(0, tinderPet.Count);
         chosenTinderPet = tinderPet[tinderPetIndex];
 
         tinderProfile.text = chosenTinderName + ", " + chosenTinderAge + "\n" + chosenTinderStarSign + "\n\nEnjoys " + chosenTinderHobby + "\nHas a pet " + chosenTinderPet;
@@ -1257,27 +1259,16 @@ public class iPhoneScript : MonoBehaviour
         switch (stage)
         {
             case 1:
-            if (tinderButton == swipeLeft && tinderScore < 0)
-            {
-                Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
-                Audio.PlaySoundAtTransform("correct", transform);
-                stage++;
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-            }
-            else if (tinderButton == swipeRight && tinderScore >= 1)
-            {
-                Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct.", moduleId);
-                Audio.PlaySoundAtTransform("correct", transform);
-                stage++;
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-            }
-            else if (tinderScore == 0)
-            {
-                if (tinderButton == swipeRight && chosenTinderName.Length >= 5)
+                if (tinderButton == swipeLeft && tinderScore < 0)
+                {
+                    Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
+                    Audio.PlaySoundAtTransform("correct", transform);
+                    stage++;
+                    tinderSetUp();
+                    tinderLogic();
+                    tinderLog();
+                }
+                else if (tinderButton == swipeRight && tinderScore >= 1)
                 {
                     Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct.", moduleId);
                     Audio.PlaySoundAtTransform("correct", transform);
@@ -1286,14 +1277,35 @@ public class iPhoneScript : MonoBehaviour
                     tinderLogic();
                     tinderLog();
                 }
-                else if (tinderButton == swipeLeft && chosenTinderName.Length < 5)
+                else if (tinderScore == 0)
                 {
-                    Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
-                    Audio.PlaySoundAtTransform("correct", transform);
-                    stage++;
-                    tinderSetUp();
-                    tinderLogic();
-                    tinderLog();
+                    if (tinderButton == swipeRight && chosenTinderName.Length >= 5)
+                    {
+                        Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct.", moduleId);
+                        Audio.PlaySoundAtTransform("correct", transform);
+                        stage++;
+                        tinderSetUp();
+                        tinderLogic();
+                        tinderLog();
+                    }
+                    else if (tinderButton == swipeLeft && chosenTinderName.Length < 5)
+                    {
+                        Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
+                        Audio.PlaySoundAtTransform("correct", transform);
+                        stage++;
+                        tinderSetUp();
+                        tinderLogic();
+                        tinderLog();
+                    }
+                    else
+                    {
+                        GetComponent<KMBombModule>().HandleStrike();
+                        strikeCount = Bomb.GetStrikes();
+                        Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
+                        tinderSetUp();
+                        tinderLogic();
+                        tinderLog();
+                    }
                 }
                 else
                 {
@@ -1304,40 +1316,19 @@ public class iPhoneScript : MonoBehaviour
                     tinderLogic();
                     tinderLog();
                 }
-            }
-            else
-            {
-                GetComponent<KMBombModule>().HandleStrike();
-                strikeCount = Bomb.GetStrikes();
-                Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-            }
-            break;
+                break;
 
             case 2:
-            if (tinderButton == swipeLeft && tinderScore < 0)
-            {
-                Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
-                Audio.PlaySoundAtTransform("correct", transform);
-                stage++;
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-            }
-            else if (tinderButton == swipeRight && tinderScore >= 1)
-            {
-                Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct.", moduleId);
-                Audio.PlaySoundAtTransform("correct", transform);
-                stage++;
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-            }
-            else if (tinderScore == 0)
-            {
-                if (tinderButton == swipeRight && chosenTinderName.Length >= 5)
+                if (tinderButton == swipeLeft && tinderScore < 0)
+                {
+                    Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
+                    Audio.PlaySoundAtTransform("correct", transform);
+                    stage++;
+                    tinderSetUp();
+                    tinderLogic();
+                    tinderLog();
+                }
+                else if (tinderButton == swipeRight && tinderScore >= 1)
                 {
                     Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct.", moduleId);
                     Audio.PlaySoundAtTransform("correct", transform);
@@ -1346,14 +1337,36 @@ public class iPhoneScript : MonoBehaviour
                     tinderLogic();
                     tinderLog();
                 }
-                else if (tinderButton == swipeLeft && chosenTinderName.Length < 5)
+                else if (tinderScore == 0)
                 {
-                    Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
-                    Audio.PlaySoundAtTransform("correct", transform);
-                    stage++;
-                    tinderSetUp();
-                    tinderLogic();
-                    tinderLog();
+                    if (tinderButton == swipeRight && chosenTinderName.Length >= 5)
+                    {
+                        Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct.", moduleId);
+                        Audio.PlaySoundAtTransform("correct", transform);
+                        stage++;
+                        tinderSetUp();
+                        tinderLogic();
+                        tinderLog();
+                    }
+                    else if (tinderButton == swipeLeft && chosenTinderName.Length < 5)
+                    {
+                        Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct.", moduleId);
+                        Audio.PlaySoundAtTransform("correct", transform);
+                        stage++;
+                        tinderSetUp();
+                        tinderLogic();
+                        tinderLog();
+                    }
+                    else
+                    {
+                        GetComponent<KMBombModule>().HandleStrike();
+                        strikeCount = Bomb.GetStrikes();
+                        Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
+                        tinderSetUp();
+                        tinderLogic();
+                        tinderLog();
+                        stage = 1;
+                    }
                 }
                 else
                 {
@@ -1365,47 +1378,10 @@ public class iPhoneScript : MonoBehaviour
                     tinderLog();
                     stage = 1;
                 }
-            }
-            else
-            {
-                GetComponent<KMBombModule>().HandleStrike();
-                strikeCount = Bomb.GetStrikes();
-                Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-                stage = 1;
-            }
-            break;
+                break;
 
             case 3:
-            if (tinderButton == swipeLeft && tinderScore < 0)
-            {
-                tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
-                Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct. PIN digit displayed.", moduleId);
-                Audio.PlaySoundAtTransform("correct", transform);
-                tinderDone = true;
-                stage++;
-            }
-            else if (tinderButton == swipeRight && tinderScore >= 1)
-            {
-                tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
-                Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct. PIN digit displayed.", moduleId);
-                Audio.PlaySoundAtTransform("correct", transform);
-                tinderDone = true;
-                stage++;
-            }
-            else if (tinderScore == 0)
-            {
-                if (tinderButton == swipeRight && chosenTinderName.Length >= 5)
-                {
-                    tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
-                    Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct. PIN digit displayed.", moduleId);
-                    Audio.PlaySoundAtTransform("correct", transform);
-                    tinderDone = true;
-                    stage++;
-                }
-                else if (tinderButton == swipeLeft && chosenTinderName.Length < 5)
+                if (tinderButton == swipeLeft && tinderScore < 0)
                 {
                     tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
                     Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct. PIN digit displayed.", moduleId);
@@ -1413,6 +1389,42 @@ public class iPhoneScript : MonoBehaviour
                     tinderDone = true;
                     stage++;
                 }
+                else if (tinderButton == swipeRight && tinderScore >= 1)
+                {
+                    tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
+                    Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct. PIN digit displayed.", moduleId);
+                    Audio.PlaySoundAtTransform("correct", transform);
+                    tinderDone = true;
+                    stage++;
+                }
+                else if (tinderScore == 0)
+                {
+                    if (tinderButton == swipeRight && chosenTinderName.Length >= 5)
+                    {
+                        tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
+                        Debug.LogFormat("[iPhone #{0}] Tinder: You swiped right. That is correct. PIN digit displayed.", moduleId);
+                        Audio.PlaySoundAtTransform("correct", transform);
+                        tinderDone = true;
+                        stage++;
+                    }
+                    else if (tinderButton == swipeLeft && chosenTinderName.Length < 5)
+                    {
+                        tinderProfile.text = "\nMatch!\n\nThe fourth digit\nof the PIN is\n\n" + pinDigits[3];
+                        Debug.LogFormat("[iPhone #{0}] Tinder: You swiped left. That is correct. PIN digit displayed.", moduleId);
+                        Audio.PlaySoundAtTransform("correct", transform);
+                        tinderDone = true;
+                        stage++;
+                    }
+                    else
+                    {
+                        GetComponent<KMBombModule>().HandleStrike();
+                        strikeCount = Bomb.GetStrikes();
+                        Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
+                        tinderSetUp();
+                        tinderLogic();
+                        stage = 1;
+                    }
+                }
                 else
                 {
                     GetComponent<KMBombModule>().HandleStrike();
@@ -1420,23 +1432,13 @@ public class iPhoneScript : MonoBehaviour
                     Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
                     tinderSetUp();
                     tinderLogic();
+                    tinderLog();
                     stage = 1;
                 }
-            }
-            else
-            {
-                GetComponent<KMBombModule>().HandleStrike();
-                strikeCount = Bomb.GetStrikes();
-                Debug.LogFormat("[iPhone #{0}] Tinder: Strike! You pressed {1}. That is incorrect. You have {2} strike(s).", moduleId, tinderButton.name, strikeCount);
-                tinderSetUp();
-                tinderLogic();
-                tinderLog();
-                stage = 1;
-            }
-            break;
+                break;
 
             default:
-            break;
+                break;
         }
     }
 
@@ -1448,7 +1450,7 @@ public class iPhoneScript : MonoBehaviour
             phoneNumber.text += textToAppend;
     }
 
-    public void OnSettingsPress (string textToAppend2)
+    public void OnSettingsPress(string textToAppend2)
     {
         Audio.PlaySoundAtTransform("keyClick", transform);
         photoRight.AddInteractionPunch(.5f);
@@ -1461,59 +1463,59 @@ public class iPhoneScript : MonoBehaviour
         switch (settingsStage)
         {
             case 1:
-            pinScreen1.material.mainTexture = buttonMat;
-            settingsStage++;
-            break;
+                pinScreen1.material.mainTexture = buttonMat;
+                settingsStage++;
+                break;
 
             case 2:
-            pinScreen2.material.mainTexture = buttonMat;
-            settingsStage++;
-            break;
+                pinScreen2.material.mainTexture = buttonMat;
+                settingsStage++;
+                break;
 
             case 3:
-            pinScreen3.material.mainTexture = buttonMat;
-            settingsStage++;
-            break;
+                pinScreen3.material.mainTexture = buttonMat;
+                settingsStage++;
+                break;
 
             case 4:
-            if (enteredPIN == correctPIN)
-            {
-                pinScreen4.material.mainTexture = buttonMat;
-                Audio.PlaySoundAtTransform("factoryReset", transform);
-                Debug.LogFormat("[iPhone #{0}] You entered {1}. That is correct. Module disarmed.", moduleId, enteredPIN);
-                GetComponent<KMBombModule>().HandlePass();
-                solved = "solved";
-                screenStarter();
-                angryBirds.gameObject.SetActive(false);
-                messages.gameObject.SetActive(false);
-                photos.gameObject.SetActive(false);
-                tinder.gameObject.SetActive(false);
-                phone.gameObject.SetActive(false);
-                settings.gameObject.SetActive(false);
-                settingsStage++;
-            }
-            else
-            {
-                GetComponent<KMBombModule>().HandleStrike();
-                strikeCount = Bomb.GetStrikes();
-                Debug.LogFormat("[iPhone #{0}] Strike! You entered {1}. That is incorrect. You have {2} strike(s).", moduleId, enteredPIN, strikeCount);
-                pinScreen1.material.mainTexture = whiteBackground;
-                pinScreen2.material.mainTexture = whiteBackground;
-                pinScreen3.material.mainTexture = whiteBackground;
-                pinScreen4.material.mainTexture = whiteBackground;
-                if (tinderDone == false)
+                if (enteredPIN == correctPIN)
                 {
-                    tinderSetUp();
-                    tinderLogic();
+                    pinScreen4.material.mainTexture = buttonMat;
+                    Audio.PlaySoundAtTransform("factoryReset", transform);
+                    Debug.LogFormat("[iPhone #{0}] You entered {1}. That is correct. Module disarmed.", moduleId, enteredPIN);
+                    GetComponent<KMBombModule>().HandlePass();
+                    solved = "solved";
+                    screenStarter();
+                    angryBirds.gameObject.SetActive(false);
+                    messages.gameObject.SetActive(false);
+                    photos.gameObject.SetActive(false);
+                    tinder.gameObject.SetActive(false);
+                    phone.gameObject.SetActive(false);
+                    settings.gameObject.SetActive(false);
+                    settingsStage++;
                 }
-                settingsStage = 1;
-                enteredPIN = "";
-            }
-            break;
+                else
+                {
+                    GetComponent<KMBombModule>().HandleStrike();
+                    strikeCount = Bomb.GetStrikes();
+                    Debug.LogFormat("[iPhone #{0}] Strike! You entered {1}. That is incorrect. You have {2} strike(s).", moduleId, enteredPIN, strikeCount);
+                    pinScreen1.material.mainTexture = whiteBackground;
+                    pinScreen2.material.mainTexture = whiteBackground;
+                    pinScreen3.material.mainTexture = whiteBackground;
+                    pinScreen4.material.mainTexture = whiteBackground;
+                    if (tinderDone == false)
+                    {
+                        tinderSetUp();
+                        tinderLogic();
+                    }
+                    settingsStage = 1;
+                    enteredPIN = "";
+                }
+                break;
 
             default:
-            GetComponent<KMBombModule>().HandleStrike();
-            break;
+                GetComponent<KMBombModule>().HandleStrike();
+                break;
         }
     }
 
@@ -1659,6 +1661,273 @@ public class iPhoneScript : MonoBehaviour
         else if (truthTeller == "Andy")
         {
             andyUnread.gameObject.SetActive(true);
+        }
+    }
+    private string TwitchHelpMessage = "Select an app by typing !{0} open [bird/messages/photos/tinder/phone/settings]. Select the proper angrybird with !{0} tap TL/TR/BL/BR. Cycle through photos with !{0} cycle. You may also use !{0} left/right # to view a specific photo. Submit Tinder by using swipe [left/right]. Use phone codes at any time with !{0} submit 425631# (Note: This will result in a strike). To submit the factory reset, type !{0} submit 1234";
+    private int TwitchPlaysModuleScore = 12;
+
+    private IEnumerator ProcessTwitchCommand(string inputCommand)
+    {
+        var commands = inputCommand.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var match = "^(bird|birds|messages|photos|tinder|phone|settings)";
+        //For photos
+        var move = 0;
+        switch (commands.Length)
+        {
+            case 1:
+                //convert single inputs into two inputs for convenience
+                commands = new string[] { "", commands[0] };
+                //allow ![app] by converting it into !open [app] automatically
+                if (Regex.Match(commands[1], match).Success)
+                {
+                    commands[0] = "open";
+                }
+                break;
+            case 3:
+                //allow for !press top/bottom left/right by converting it into !press tl/bl/tr/br
+                //Only allow left/right or top/bottom for each case, so we don't get bottom bottom or left right
+                var command = Regex.Match(inputCommand.ToLowerInvariant(), "^(press|select|tap) ?(?:(left|right)|(top|bottom|up|down)) ?(?(2)(top|bottom|up|down)|(left|right))$");
+                var sb = new StringBuilder().Append(commands[1][0]).Append(commands[2][0]);
+                if (command.Success) commands = new string[] { commands[0], sb.ToString() };
+                //allow for !cycle left/right # by converting it into !left/right #
+                else if (Regex.Match(inputCommand.ToLowerInvariant(), "^(cycle|press|tap|swipe) ?(left|right) ?([1-8])$").Success) commands = new string[] { commands[1], commands[2] };
+                break;
+            case 2:
+                //Allow submit inputs for any app as long as it doesn't contain a digit
+                //also random unneeded variable as I'm too lazy to use a try/catch over just using TryParse.
+                var digit = 0;
+                if (commands[0].Equals("submit") && !int.TryParse(commands[1].Replace("#", ""), out digit)) commands[0] = "press";
+                //Allowing !cycle left or !cycle right
+                if (commands[0].Equals("cycle") && Regex.Match(commands[1], "^(left|right|l|r)").Success) commands[0] = "press";
+                break;
+            default:
+                yield break;
+        }
+        switch (commands[0])
+        {
+            case "":
+                //!home, !return, !back
+                if (Regex.Match(commands[1], "^(return|home|back)").Success)
+                {
+                    //TP will drop inputs if it doesn't detect 
+                    yield return null;
+                    OnhomeButton();
+                    yield return new WaitForSeconds(0.1f);
+                    yield break;
+                }
+                if (commands[1].Equals("cycle"))
+                {
+                    yield return null;
+                    //Allows !cycle anywhere
+                    if (!photoScreen.gameObject.activeInHierarchy)
+                    {
+                        OnhomeButton();
+                        yield return new WaitForSeconds(0.1f);
+                        HomeButtonPress(photos);
+                        yield return new WaitForSeconds(1f);
+                    }
+                    for (int pic = 0; pic < 8; pic++)
+                    {
+                        //probably not necessary but option to cancel command included
+                        yield return "trywaitcancel 2 The cycle has been aborted due to a request to cancel";
+                        PhotoPress(photoRight);
+                    }
+                }
+                //!"" left/right makes no sense. Fix it so that it converts to !left/right 1
+                if (Regex.Match(commands[1], "^(left|right)").Success) commands = new string[] { commands[1], "1" };
+                break;
+            case "open":
+            case "press":
+            case "swipe":
+            case "tap":
+            case "select":
+                //open only applies for apps
+                if (commands[0].Equals("open") && !Regex.Match(commands[1], match).Success) yield break;
+                //swipe should be used for photos and tinder
+                if (commands[0].Equals("swipe") && (TopLeft.gameObject.activeInHierarchy || Regex.Match(commands[1], match).Success || oneButton.gameObject.activeInHierarchy || oneSButton.gameObject.activeInHierarchy)) yield break;
+                //select photo doesn't really make sense in this context
+                if (commands[0].Equals("select") && photoScreen.gameObject.activeInHierarchy) yield break;
+                yield return null;
+                switch (commands[1])
+                {
+                    case "bird":
+                    case "birds":
+                        OnhomeButton();
+                        HomeButtonPress(angryBirds);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
+                    case "messages":
+                        OnhomeButton();
+                        HomeButtonPress(messages);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
+                    case "photos":
+                        OnhomeButton();
+                        HomeButtonPress(photos);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
+                    case "tinder":
+                        OnhomeButton();
+                        HomeButtonPress(tinder);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
+                    case "phone":
+                        OnhomeButton();
+                        HomeButtonPress(phone);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
+                    case "settings":
+                        OnhomeButton();
+                        HomeButtonPress(settings);
+                        yield return new WaitForSeconds(0.1f);
+                        break;
+                }
+                if (TopLeft.gameObject.activeInHierarchy)
+                {
+                    yield return null;
+                    switch (commands[1])
+                    {
+                        case "tl":
+                        case "lt":
+                            BirdsPress(TopLeft);
+                            break;
+                        case "tr":
+                        case "rt":
+                            BirdsPress(TopRight);
+                            break;
+                        case "bl":
+                        case "lb":
+                            BirdsPress(BottomLeft);
+                            break;
+                        case "br":
+                        case "rb":
+                            BirdsPress(BottomRight);
+                            break;
+                    }
+                }
+                else if (tinderProfile.gameObject.activeInHierarchy)
+                {
+                    yield return null;
+                    switch (commands[1])
+                    {
+                        case "left":
+                        case "l":
+                            TinderPress(swipeLeft);
+                            break;
+                        case "right":
+                        case "r":
+                            TinderPress(swipeRight);
+                            break;
+                    }
+                }
+                else if (photoScreen.gameObject.activeInHierarchy)
+                {
+                    //Convert !cycle left/right and !press left/right to left/right 1
+                    if (Regex.Match(commands[1], "^(left|right|l|r)").Success) commands = new string[] { commands[1], "1"};
+                }
+                //no submit here as it might activate code here and in the special submit case.
+                if (oneButton.gameObject.activeInHierarchy && !commands[0].Equals("submit"))
+                {
+                    foreach (char c in commands[1])
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                        //# requires a special case as OnPhonePress doesn't handle that
+                        if (c == '#') OnHashButton();
+                        //I may or may not have had "phone" and "photos" show up in the text box a couple of times
+                        else if (!Char.IsDigit(c) && !c.Equals('*')) yield break;
+                        else OnPhonePress(c.ToString());
+                    }
+                    yield break;
+                }
+                //Now that we've confirmed we're in the phone or settings, no more reason to have submit work separately.
+                else if (oneButton.gameObject.activeInHierarchy || oneSButton.gameObject.activeInHierarchy) commands[0] = "submit";
+                break;
+        }
+        if (commands[0].Equals("submit"))
+        {
+            var result = 0;
+            if (commands[1].Length < 5 && int.TryParse(commands[1], out result))
+            {
+                yield return null;
+                //submit from any app
+                if (!oneSButton.gameObject.activeInHierarchy)
+                {
+                    home.OnInteract();
+                    settings.OnInteract();
+                }
+                for (int i = 0; i < commands[1].Length; i++)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    OnSettingsPress(commands[1][i].ToString());
+                }
+            }
+            else if (commands[1].Length == 6 && commands[1].Last().Equals('#'))
+            {
+                //hardcode cheats, but ONLY for !submit
+                switch (commands[1])
+                {
+                    case "52716#":
+                    case "60138#":
+                    case "81606#":
+                    case "30962#":
+                    case "43892#":
+                    case "15397#":
+                    case "79431#":
+                    case "21486#":
+                        if (!oneButton.gameObject.activeInHierarchy)
+                        {
+                            yield return null;
+                            //submit from any app
+                            OnhomeButton();
+                            HomeButtonPress(phone);
+                        }
+                        for (int i = 0; i < 5; i++)
+                        {
+                            yield return new WaitForSeconds(0.1f);
+                            OnPhonePress(commands[1][i].ToString());
+                        }
+                        yield return null;
+                        OnHashButton();
+                        break;
+                    default:
+                        if (int.TryParse(commands[1].Remove(5), out result))
+                        {
+                            yield return null;
+                            yield return "sendtochat Code not recognized.";
+                            yield break;
+                        }
+                        break;
+                }
+            }
+        }
+        if (photoScreen.gameObject.activeInHierarchy && int.TryParse(commands[1], out move) && (commands[0].Equals("left") || commands[0].Equals("right")))
+        {
+            yield return null;
+            if (move < 1 || move > 7)
+            {
+                yield return "sendtochat Please submit a number between 1 and 7.";
+                yield break;
+            }
+            yield return null;
+            switch (commands[0])
+            {
+                case "left":
+                case "l":
+                    for (int i = 0; i < move; i++)
+                    {
+                        PhotoPress(photoLeft);
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                    break;
+                case "right":
+                case "r":
+                    for (int i = 0; i < move; i++)
+                    {
+                        PhotoPress(photoRight);
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                    break;
+            }
         }
     }
 }
