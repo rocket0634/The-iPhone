@@ -13,9 +13,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: iPhone
   title: The iPhone
-  description: "The iPhone 1.02\nSomebody has welded a smart phone onto a bomb. Nobody
+  description: "The iPhone 1.1\nSomebody has welded a smart phone onto a bomb. Nobody
     tell Apple - it\u2019s probably a crime in certain states.\n\nModule ID: iPhone\n\nCreated
-    by: Royal_Flu$h\n\nManual available here: https://ktane.timwi.de/HTML/The%20iPhone.html"
-  version: 1.02
+    by: Royal_Flu$h\nTwitchPlays implemented by: Riverbui\n\nManual available here:
+    https://ktane.timwi.de/HTML/The%20iPhone.html"
+  version: 1.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 801a312046cad43918a9e94f1cb23ee0, type: 3}
