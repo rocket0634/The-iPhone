@@ -723,9 +723,22 @@ public class TestHarness : MonoBehaviour
                         heldSelectables.Add(selectable);
                     }
                 }
+                else if (currentObject is KMSelectable[])
+                {
+                    foreach (KMSelectable selectable in (KMSelectable[])currentObject)
+                    {
+                        selectable.OnInteract();
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
                 else if (currentObject is string)
                 {
                     Debug.Log("Twitch handler sent: " + currentObject);
+                    if (((string)currentObject).StartsWith("trywaitcancel"))
+                    {
+                        var wait = int.Parse(((string)currentObject).Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries)[1]);
+                        yield return new WaitForSeconds(wait);
+                    }
                     yield return currentObject;
                 }
                 else if (currentObject is Quaternion)

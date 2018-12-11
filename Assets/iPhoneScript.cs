@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using iPhone;
@@ -1664,270 +1663,263 @@ public class iPhoneScript : MonoBehaviour
         }
     }
     private string TwitchHelpMessage = "Select an app by typing !{0} open [bird/messages/photos/tinder/phone/settings]. Select the proper angrybird with !{0} tap TL/TR/BL/BR. Cycle through photos with !{0} cycle. You may also use !{0} left/right # to view a specific photo. Submit Tinder by using swipe [left/right]. Use phone codes at any time with !{0} submit 425631# (Note: This will result in a strike). To submit the factory reset, type !{0} submit 1234";
-    private int TwitchPlaysModuleScore = 12;
 
     private IEnumerator ProcessTwitchCommand(string inputCommand)
     {
-        var commands = inputCommand.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        var match = "^(bird|birds|messages|photos|tinder|phone|settings)";
-        //For photos
-        var move = 0;
-        switch (commands.Length)
+        var commands = inputCommand.ToLowerInvariant();
+        if (commands == "autosolve")
         {
-            case 1:
-                //convert single inputs into two inputs for convenience
-                commands = new string[] { "", commands[0] };
-                //allow ![app] by converting it into !open [app] automatically
-                if (Regex.Match(commands[1], match).Success)
-                {
-                    commands[0] = "open";
-                }
-                break;
-            case 3:
-                //allow for !press top/bottom left/right by converting it into !press tl/bl/tr/br
-                //Only allow left/right or top/bottom for each case, so we don't get bottom bottom or left right
-                var command = Regex.Match(inputCommand.ToLowerInvariant(), "^(press|select|tap) ?(?:(left|right)|(top|bottom|up|down)) ?(?(2)(top|bottom|up|down)|(left|right))$");
-                var sb = new StringBuilder().Append(commands[1][0]).Append(commands[2][0]);
-                if (command.Success) commands = new string[] { commands[0], sb.ToString() };
-                //allow for !cycle left/right # by converting it into !left/right #
-                else if (Regex.Match(inputCommand.ToLowerInvariant(), "^(cycle|press|tap|swipe) ?(left|right) ?([1-8])$").Success) commands = new string[] { commands[1], commands[2] };
-                break;
-            case 2:
-                //Allow submit inputs for any app as long as it doesn't contain a digit
-                //also random unneeded variable as I'm too lazy to use a try/catch over just using TryParse.
-                var digit = 0;
-                if (commands[0].Equals("submit") && !int.TryParse(commands[1].Replace("#", ""), out digit)) commands[0] = "press";
-                //Allowing !cycle left or !cycle right
-                if (commands[0].Equals("cycle") && Regex.Match(commands[1], "^(left|right|l|r)").Success) commands[0] = "press";
-                break;
-            default:
-                yield break;
+            StartCoroutine(AutoSolve());
+            yield break;
         }
-        switch (commands[0])
-        {
-            case "":
-                //!home, !return, !back
-                if (Regex.Match(commands[1], "^(return|home|back)").Success)
-                {
-                    //TP will drop inputs if it doesn't detect 
-                    yield return null;
-                    OnhomeButton();
-                    yield return new WaitForSeconds(0.1f);
-                    yield break;
-                }
-                if (commands[1].Equals("cycle"))
-                {
-                    yield return null;
-                    //Allows !cycle anywhere
-                    if (!photoScreen.gameObject.activeInHierarchy)
-                    {
-                        OnhomeButton();
-                        yield return new WaitForSeconds(0.1f);
-                        HomeButtonPress(photos);
-                        yield return new WaitForSeconds(1f);
-                    }
-                    for (int pic = 0; pic < 8; pic++)
-                    {
-                        //probably not necessary but option to cancel command included
-                        yield return "trywaitcancel 2 The cycle has been aborted due to a request to cancel";
-                        PhotoPress(photoRight);
-                    }
-                }
-                //!"" left/right makes no sense. Fix it so that it converts to !left/right 1
-                if (Regex.Match(commands[1], "^(left|right)").Success) commands = new string[] { commands[1], "1" };
-                break;
-            case "open":
-            case "press":
-            case "swipe":
-            case "tap":
-            case "select":
-                //open only applies for apps
-                if (commands[0].Equals("open") && !Regex.Match(commands[1], match).Success) yield break;
-                //swipe should be used for photos and tinder
-                if (commands[0].Equals("swipe") && (TopLeft.gameObject.activeInHierarchy || Regex.Match(commands[1], match).Success || oneButton.gameObject.activeInHierarchy || oneSButton.gameObject.activeInHierarchy)) yield break;
-                //select photo doesn't really make sense in this context
-                if (commands[0].Equals("select") && photoScreen.gameObject.activeInHierarchy) yield break;
-                yield return null;
-                switch (commands[1])
-                {
-                    case "bird":
-                    case "birds":
-                        OnhomeButton();
-                        HomeButtonPress(angryBirds);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                    case "messages":
-                        OnhomeButton();
-                        HomeButtonPress(messages);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                    case "photos":
-                        OnhomeButton();
-                        HomeButtonPress(photos);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                    case "tinder":
-                        OnhomeButton();
-                        HomeButtonPress(tinder);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                    case "phone":
-                        OnhomeButton();
-                        HomeButtonPress(phone);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                    case "settings":
-                        OnhomeButton();
-                        HomeButtonPress(settings);
-                        yield return new WaitForSeconds(0.1f);
-                        break;
-                }
-                if (TopLeft.gameObject.activeInHierarchy)
-                {
-                    yield return null;
-                    switch (commands[1])
-                    {
-                        case "tl":
-                        case "lt":
-                            BirdsPress(TopLeft);
-                            break;
-                        case "tr":
-                        case "rt":
-                            BirdsPress(TopRight);
-                            break;
-                        case "bl":
-                        case "lb":
-                            BirdsPress(BottomLeft);
-                            break;
-                        case "br":
-                        case "rb":
-                            BirdsPress(BottomRight);
-                            break;
-                    }
-                }
-                else if (tinderProfile.gameObject.activeInHierarchy)
-                {
-                    yield return null;
-                    switch (commands[1])
-                    {
-                        case "left":
-                        case "l":
-                            TinderPress(swipeLeft);
-                            break;
-                        case "right":
-                        case "r":
-                            TinderPress(swipeRight);
-                            break;
-                    }
-                }
-                else if (photoScreen.gameObject.activeInHierarchy)
-                {
-                    //Convert !cycle left/right and !press left/right to left/right 1
-                    if (Regex.Match(commands[1], "^(left|right|l|r)").Success) commands = new string[] { commands[1], "1"};
-                }
-                //no submit here as it might activate code here and in the special submit case.
-                if (oneButton.gameObject.activeInHierarchy && !commands[0].Equals("submit"))
-                {
-                    foreach (char c in commands[1])
-                    {
-                        yield return new WaitForSeconds(0.1f);
-                        //# requires a special case as OnPhonePress doesn't handle that
-                        if (c == '#') OnHashButton();
-                        //I may or may not have had "phone" and "photos" show up in the text box a couple of times
-                        else if (!Char.IsDigit(c) && !c.Equals('*')) yield break;
-                        else OnPhonePress(c.ToString());
-                    }
-                    yield break;
-                }
-                //Now that we've confirmed we're in the phone or settings, no more reason to have submit work separately.
-                else if (oneButton.gameObject.activeInHierarchy || oneSButton.gameObject.activeInHierarchy) commands[0] = "submit";
-                break;
-        }
-        if (commands[0].Equals("submit"))
-        {
-            var result = 0;
-            if (commands[1].Length < 5 && int.TryParse(commands[1], out result))
-            {
-                yield return null;
-                //submit from any app
-                if (!oneSButton.gameObject.activeInHierarchy)
-                {
-                    home.OnInteract();
-                    settings.OnInteract();
-                }
-                for (int i = 0; i < commands[1].Length; i++)
-                {
-                    yield return new WaitForSeconds(0.1f);
-                    OnSettingsPress(commands[1][i].ToString());
-                }
-            }
-            else if (commands[1].Length == 6 && commands[1].Last().Equals('#'))
-            {
-                //hardcode cheats, but ONLY for !submit
-                switch (commands[1])
-                {
-                    case "52716#":
-                    case "60138#":
-                    case "81606#":
-                    case "30962#":
-                    case "43892#":
-                    case "15397#":
-                    case "79431#":
-                    case "21486#":
-                        if (!oneButton.gameObject.activeInHierarchy)
-                        {
-                            yield return null;
-                            //submit from any app
-                            OnhomeButton();
-                            HomeButtonPress(phone);
-                        }
-                        for (int i = 0; i < 5; i++)
-                        {
-                            yield return new WaitForSeconds(0.1f);
-                            OnPhonePress(commands[1][i].ToString());
-                        }
-                        yield return null;
-                        OnHashButton();
-                        break;
-                    default:
-                        if (int.TryParse(commands[1].Remove(5), out result))
-                        {
-                            yield return null;
-                            yield return "sendtochat Code not recognized.";
-                            yield break;
-                        }
-                        break;
-                }
-            }
-        }
-        if (photoScreen.gameObject.activeInHierarchy && int.TryParse(commands[1], out move) && (commands[0].Equals("left") || commands[0].Equals("right")))
+
+        //Regex conditions for each app
+        //Each set of words in parentheses are considered a group. These groups are used later on to match button indicies, to save needing to write them more than once.
+        //If there is a ?: in paranthesis, it means that the group will not be captured for later use.
+        //However, groups within groups will still be captured, as each set of parentheses are processed individually.
+        var appCondition = Regex.Match(commands, "^(?:open |press |tap |select |)(?:(bird|birds)|(messages)|(photos)|(tinder)|(phone)|(settings))$");
+        //If the condition in ?(#) matches, then check for this next condition.
+        var longBirdCondition = Regex.Match(commands, "^(?:press|tap|select) ((top|bottom|up|down)|(left|right)) ((?(2)(left|right)|(top|bottom|up|down)))$");
+        var birdCondition = Regex.Match(commands, "^(?:press|tap|select) (([bt])|([lr]))((?(2)([lr])|([bt])))$");
+        var photoCondition = Regex.Match(commands, "^(press |cycle |)(left|right|l|r)( [1-9]|)$");
+        var cycleCondition = Regex.Match(commands, "^cycle$");
+        var tinderCondition = Regex.Match(commands, "^(press|tap|swipe) (left|right|l|r)$");
+        //{1,4} means match between 1 and 4 values of [0-9]
+        var submitCondition = Regex.Match(commands, "^(press|submit) ([0-9]{1,4})$");
+        //You can submit any code now, hoorah.
+        var cheatCondition = Regex.Match(commands, "^(press|submit) ([0-9*]{1,6}#)$");
+        var homeCondition = Regex.Match(commands, "^(return|home|back)$");
+        
+        //Lists of buttons to match index entries
+        var apps = new List<KMSelectable> { angryBirds, messages, photos, tinder, phone, settings };
+        var birdSelectables = new[] { TopLeft, TopRight, BottomLeft, BottomRight };
+        var photoSelectables = new List<KMSelectable> { photoLeft, photoRight };
+        var tinderSelectables = new List<KMSelectable> { swipeLeft, swipeRight };
+        var phoneSelectables = new List<KMSelectable> { zeroButton, oneButton, twoButton, threeButton, fourButton, fiveButton, sixButton, sevenButton,
+        eightButton, nineButton, starButton, hashButton };
+        var solveSelectables = new List<KMSelectable> { zeroSButton, oneSButton, twoSButton, threeSButton, fourSButton,
+        fiveSButton, sixSButton, sevenSButton, eightSButton, nineSButton };
+        //Due to variety, bird commands are going to need a few extra cases
+        var birdArea = new List<char> { 't', 'b', 'l', 'r' };
+        //For photos and tinder
+        var selectableChar = new List<char> { 'l', 'r' };
+
+        //Since only one of these can be true at a time, use IndexOf(true) rather than using each Regex.Success separately
+        var matchedCondition = new List<bool> { birdCondition.Success || longBirdCondition.Success, false,
+         photoCondition.Success, tinderCondition.Success, cheatCondition.Success, submitCondition.Success };
+        //List of keeping track which screen we're on. Also used to make sure people aren't submitting commands to the incorrect screen
+        var curScreen = new List<bool> { TopLeft.gameObject.activeInHierarchy, philMessage.gameObject.activeInHierarchy, photoLeft.gameObject.activeInHierarchy,
+            tinderProfile.gameObject.activeInHierarchy, oneButton.gameObject.activeInHierarchy, oneSButton.gameObject.activeInHierarchy, angryBirds.gameObject.activeInHierarchy };
+
+        //Press home if expecting a home press, or attempting to open an application from another screen, or when expecting to cycle.
+        //There's no need to do it if already on home screen. If the desired screen matches the current screen, there's no need to press home. And if cycling, there's no need to press home when already cycling.
+        var homeBool = !curScreen.Last() && (homeCondition.Success || (appCondition.Success && !appCondition.Groups[curScreen.IndexOf(true) + 2].Success) || (cycleCondition.Success && !curScreen[2]));
+        //Press home when submitting numbers and not in the settings/phone apps.
+        homeBool = homeBool || (matchedCondition[4] && !curScreen[4]) || (matchedCondition[5] && !curScreen[5]);
+
+        var list = new List<KMSelectable>();
+        var move = 1;
+        //Press the home button if either opening an app or returning to the home screen.
+        if (homeBool)
+            list.Add(home);
+
+        //Outside of the home press, process cycleCondition separately
+        if (cycleCondition.Success)
         {
             yield return null;
-            if (move < 1 || move > 7)
+            if (!curScreen[2]) list.Add(apps[2]);
+            if (list.Count > 0) yield return list.ToArray();
+            yield return new WaitForSeconds(1);
+            for (int pic = 0; pic < 8; pic++)
+            {
+                //Basically tells tp to wait 2 seconds unless someone sends !cancel
+                yield return "trywaitcancel 2 The cycle has been aborted due to a request to cancel";
+                yield return new KMSelectable[] { photoRight };
+            }
+            yield break;
+        }
+
+        //If homeBool is true, this means the home button will be pressed, and we will be in the home screen.
+        //If curScreen.Last() is true, this means we were already on the home screen.
+        if (appCondition.Success && (homeBool || curScreen.Last()))
+        {
+            for (int i = 0; i < apps.Count(); i++)
+            {
+                //Check each group for a match within a match so that I don't need to make switch statements
+                //Start at 1, as 0 is the whole match.
+                if (appCondition.Groups[i + 1].Success)
+                {
+                    list.Add(apps[i]);
+                    break;
+                }
+            }
+        }
+        //birdCondition || longBirdCondition && angry birds screen
+        if (matchedCondition[0] && curScreen[0])
+        {
+            var birdPress = birdCondition.Success ? birdCondition : longBirdCondition;
+            //grab the matched values from birdCondition/longBirdConditon, and replace instances of up/down with t/b
+            var ud0 = birdPress.Groups[1].Value.Replace("u", "t").Replace("d", "b");
+            var ud1 = birdPress.Groups[4].Value.Replace("u", "t").Replace("d", "b");
+            //Fancy math to get index values that work for the button presses.
+            //Each value is added by 1, because 0 multiplied by anything is always 0.
+            //The resulting values are 3, 4, 6, and 8. Dividing all of these numbers by 2 gets me 1, 2, 3, 4, which gets me values perfectly compatible with indexing.
+            //As far as integer division goes anyway, that was just a stroke of luck.
+            var chars = ((birdArea.IndexOf(ud0[0]) + 1) * (birdArea.IndexOf(ud1[0]) + 1) / 2) - 1;
+            list.Add(birdSelectables[chars]);
+        }
+        //photoCondition && photos screen
+        if (matchedCondition[2] && curScreen[2])
+        {
+            //check only l/r rather than l/r and left/right
+            var dir = photoCondition.Groups[2].Value[0];
+            var str = photoCondition.Groups[3].Value;
+            //calling selectables[dir] should call the selectable directly.
+            //check "#" vs " #". Return -1 if not a number.
+            move = str == "" ? 1 : str.Length > 1 ? str[1] - '0' : -1;
+            if (move > 7 || move < 1)
             {
                 yield return "sendtochat Please submit a number between 1 and 7.";
                 yield break;
             }
-            yield return null;
-            switch (commands[0])
+            for (int i = 0; i < move; i++)
+                list.Add(photoSelectables[selectableChar.IndexOf(dir)]);
+        }
+        //tinderCondition && tinder screen
+        if (matchedCondition[3] && curScreen[3])
+        {
+            //Basically the same method as photos, but without numbers or cycling.
+            var swipeDir = tinderCondition.Groups[2].Value[0];
+            list.Add(tinderSelectables[selectableChar.IndexOf(swipeDir)]);
+        }
+        if (matchedCondition[4] || matchedCondition[5])
+        {
+            //Enter either settings app or phone app based on which matched condition is true.
+            var matched = matchedCondition.IndexOf(true);
+            if (homeBool) list.Add(apps[matched]);
+            var code = matched == 4 ? cheatCondition.Groups[2].Value : submitCondition.Groups[2].Value;
+            var buttons = matched == 4 ? phoneSelectables : solveSelectables;
+            for (int i = 0; i < code.Length; i++)
             {
-                case "left":
-                case "l":
-                    for (int i = 0; i < move; i++)
-                    {
-                        PhotoPress(photoLeft);
-                        yield return new WaitForSeconds(0.1f);
-                    }
-                    break;
-                case "right":
-                case "r":
-                    for (int i = 0; i < move; i++)
-                    {
-                        PhotoPress(photoRight);
-                        yield return new WaitForSeconds(0.1f);
-                    }
-                    break;
+                var index = code[i] == '*' ? 10 : code[i] == '#' ? 11 : code[i] - '0';
+                list.Add(buttons[index]);
             }
         }
+        if (list.Count == 0) yield break;
+        yield return null;
+        yield return list.ToArray();
+    }
+    
+    private IEnumerator TwitchHandleForcedSolve()
+    {
+        StartCoroutine(AutoSolve());
+        yield return null;
+    }
+
+    private IEnumerator AutoSolve()
+    {
+        var pinScreens = new[] { pinScreen1, pinScreen2, pinScreen3, pinScreen4 };
+        var birdDictionary = new Dictionary<string, KMSelectable> { { "Top Left", TopLeft }, { "Top Right", TopRight }, { "Bottom Left", BottomLeft }, { "Bottom Right", BottomRight } };
+        foreach (MeshRenderer mesh in pinScreens)
+            mesh.material.mainTexture = whiteBackground;
+        var coroutine = CheatPress(0);
+        settingsStage = 1;
+        enteredPIN = "";
+        phoneNumber.text = "";
+        if (!angryBirds.gameObject.activeInHierarchy)
+        {
+            home.OnInteract();
+            yield return null;
+        }
+        if (angryBirdsWin != "true")
+        {
+            while (coroutine.MoveNext())
+                yield return coroutine.Current;
+            angryBirds.OnInteract();
+            yield return new WaitForSeconds(0.3f);
+            birdDictionary[correctAngryBird].OnInteract();
+            yield return new WaitForSeconds(0.3f);
+            home.OnInteract();
+            yield return null;
+        }
+        coroutine = CheatPress(1);
+        while (coroutine.MoveNext())
+            yield return coroutine.Current;
+        var unread = new[] { philUnread, mickUnread, robUnread, andyUnread };
+        var unreadNames = new[] { "Phil", "Mick", "Rob", "Andy" };
+        if (messageCheatAlert != "true")
+        {
+            unread[Array.IndexOf(unreadNames, truthTeller)].gameObject.SetActive(true);
+            messageCheatAlert = "true";
+            messages.OnInteract();
+            yield return new WaitForSeconds(0.3f);
+            home.OnInteract();
+            yield return null;
+        }
+        coroutine = CheatPress(2);
+        while (coroutine.MoveNext())
+            yield return coroutine.Current;
+        if (photoRevealLight != "true")
+        {
+            photos.OnInteract();
+            yield return null;
+            photoRevealLight = "true";
+            while (photoScreen.material.mainTexture != truePhotos[truePhotosSelection])
+            {
+                photoRight.OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return new WaitForSeconds(0.2f);
+            home.OnInteract();
+            yield return null;
+        }
+        if (!tinderDone)
+        {
+            stage = 1;
+            coroutine = CheatPress(3);
+            while (coroutine.MoveNext())
+                yield return coroutine.Current;
+            tinder.OnInteract();
+            yield return new WaitForSeconds(0.3f);
+            while (!tinderDone)
+            {
+                if (tinderScore < 0 || (tinderScore == 0 && chosenTinderName.Length < 5))
+                    swipeLeft.OnInteract();
+                else if (tinderScore >= 1 || (tinderScore == 0 && chosenTinderName.Length >= 5))
+                    swipeRight.OnInteract();
+                yield return new WaitForSeconds(0.3f);
+            }
+            home.OnInteract();
+            yield return null;
+        }
+        settings.OnInteract();
+        yield return new WaitForSeconds(0.1f);
+        foreach (string s in pinDigits)
+        {
+            OnSettingsPress(s);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private IEnumerator CheatPress(int num)
+    {
+        var vowel = !Bomb.GetSerialNumberLetters().All(x => x != 'A' && x != 'E' && x != 'I' && x != 'O' && x != 'U');
+        var codeDictionaries = new[] {
+            new Dictionary<bool, int> { { true, 52716 }, { false, 43892 } },
+            new Dictionary<bool, int> { { true, 60138 }, { false, 15397 } },
+            new Dictionary<bool, int> { { true, 81606 }, { false, 79431 } },
+            new Dictionary<bool, int> { { true, 30962 }, { false, 21486 } }
+        };
+        phone.OnInteract();
+        yield return null;
+        foreach (char c in codeDictionaries[num][vowel].ToString())
+        {
+            //Do OnPhonePress rather than press each individual button for ease
+            OnPhonePress(c.ToString());
+            yield return new WaitForSeconds(0.1f);
+        }
+        home.OnInteract();
+        phoneNumber.text = "";
+        yield return null;
     }
 }

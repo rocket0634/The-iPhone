@@ -67,4 +67,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HighlightPrefab: {fileID: 100000, guid: d78a484c6e87f1b47b6596ac080fe942, type: 2}
-  AudioClips: []
+  AudioClips:
+  - {fileID: 8300000, guid: 09674f800969742849775f14f76a942e, type: 3}
+  - {fileID: 8300000, guid: fd2da7bfe51cf4a549ba307d14735445, type: 3}
+  - {fileID: 8300000, guid: d78d95d6b03a3494599fe89ccce31c50, type: 3}
+  - {fileID: 8300000, guid: e7e0d372a9cee40e29490729b66a90eb, type: 3}
+  - {fileID: 8300000, guid: d7cc0cfaf07774e288c1c991d41643b0, type: 3}
+  - {fileID: 8300000, guid: 85d5858cb750f4a349dc0fdea8481dd9, type: 3}
+  - {fileID: 8300000, guid: 4edf78f0171fc483e945f3cbd33ba165, type: 3}
+  - {fileID: 8300000, guid: 3db47a1f036ed4392a879131b23b48f1, type: 3}
